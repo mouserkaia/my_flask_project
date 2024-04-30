@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SmartPark Home Page</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+
+</head>
+
+
+<body>
+  <div class="wrapper">
+    <nav>
+      <input type="checkbox" id="show-search">
+      <input type="checkbox" id="show-menu">
+      <label for="show-menu" class="menu-icon"><i class="fas fa-bars"></i></label>
+      <div class="content">
+      <div class="logo"><a href="#"><i class="fas fa-car"></i> SmartPark</a></div>
+
+        <ul class="links">
+          <li><a href="/">Real-Time Status</a></li>
+          <li><a href="/duration/">Real-Time Parking Duration</a></li>
+          <li><a href="/statistics/">Statistics</a></li>
+            </ul>
+          </li>
+       
+        </ul>
+      </div>
+      <label for="show-search" class="search-icon"><i class="fas fa-search"></i></label>
+      <form action="#" class="search-box">
+        <input type="text" placeholder="Type Something to Search..." required>
+        <button type="submit" class="go-icon"><i class="fas fa-long-arrow-alt-right"></i></button>
+      </form>
+    </nav>
+  </div>
+ 
+        
+        <div class="card-contain">
+            <div class="row">
+            <div class="col-md-3">
+              <div class="card-counter primary">
+                <img src="{{ url_for('static', filename='Parking_map.png') }}" style="width: 100%; height: 100%">
+              </div>
+            </div>
+           
+
+
+            <div class="col-md-3">
+                <div class="card-counter info">
+                  <i class="fas fa-graduation-cap"></i>
+
+                  <span class="count-numbers">211</span>
+                  <span class="count-name">Student Parking</span>
+                </div>
+            </div>
+
+
+
+                <div class="card-counter success">
+                  <i class="fa fa-car"></i>
+                  <span class="count-numbers">85</span>
+                  <span class="count-name">Handicap Spots</span>
+                </div>
+              </div> 
+
+
+              <div class="col-md-3">
+                <div class="card-counter danger">
+                  <i class="fas fa-parking"></i>
+
+                  <span class="count-numbers" id="count">0</span>
+
+
+                
+                  <span class="count-name">Total Spots</span>
+
+
+                </div>
+
+                
+
+
+                <div class="card-contain">
+                    <div class="row">
+                    <div class="col-md-3">
+                      <div class="card-counter stats">
+                        <div class="row">
+                            <div class="span3">
+                                <ul class="unstyled">
+                                    <li>Availabilty <span class="pull-right strong">28.7%</span>
+                                        <div class="progress progress-important" style ="width: 600px;">
+                                            <div class="bar" style="width: 45%;"></div>
+                                        </div>
+                                    </li>
+                                    <li>Occupancy<span class="pull-right strong">71.3%</span>
+                                        <div class="progress progress-success" style="width: 600px;">
+                                            <div class="bar" style="width: 30%;"></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+
+               
+                    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+                    
+
+
+                    <div class="card-contain">
+                        <div class="row">
+                        <div class="col-md-3">
+                          <div class="card-counter chart">
+                            <h5>Number of Vehicles by Parking Duration</h5>
+                            <div id="bar-chart"></div>
+                          </div>
+                        </div>
+
+                <script>
+                  function updateCount() {
+                    fetch('/count')
+                      .then(response => response.json())
+                      .then(data => {
+                        document.getElementById('count').innerText = data.count;
+                      })
+                      .catch(error => {
+                        console.error('Error fetching count:', error);
+                      });
+                  }
+              
+                  // Update count initially
+                  updateCount();
+              
+                  // Update count every 5 seconds (adjust as needed)
+                  setInterval(updateCount, 5000);
+
+                  google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(drawCharts);
+function drawCharts() {
+  
+ 
+  // actual bar chart data
+  var barData = google.visualization.arrayToDataTable([
+    ['Day', 'Page Views', 'Unique Views'],
+    ['Sun',  1050,      600],
+    ['Mon',  1370,      910],
+    ['Tue',  660,       400],
+    ['Wed',  1030,      540],
+    ['Thu',  1000,      480],
+    ['Fri',  1170,      960],
+    ['Sat',  660,       320]
+  ]);
+  // set bar chart options
+  var barOptions = {
+    focusTarget: 'category',
+    backgroundColor: 'transparent',
+    colors: ['cornflowerblue', 'tomato'],
+    fontName: 'Open Sans',
+    chartArea: {
+      left: 50,
+      top: 10,
+      width: '100%',
+      height: '50%'
+    },
+    bar: {
+      groupWidth: '80%'
+    },
+    hAxis: {
+      textStyle: {
+        fontSize: 11
+      }
+    },
+    vAxis: {
+      minValue: 0,
+      maxValue: 1500,
+      baselineColor: '#DDD',
+      gridlines: {
+        color: '#DDD',
+        count: 4
+      },
+      textStyle: {
+        fontSize: 11
+      }
+    },
+   
+    animation: {
+      duration: 1200,
+      easing: 'out',
+			startup: true
+    }
+  };
+  // draw bar chart twice so it animates
+  var barChart = new google.visualization.ColumnChart(document.getElementById('bar-chart'));
+  //barChart.draw(barZeroData, barOptions);
+  barChart.draw(barData, barOptions);
+  
+  
+  
+
+}
+                </script>
+
+
+
+
+              </div> 
+
+
+
+             
+
+</body>
+</html>
